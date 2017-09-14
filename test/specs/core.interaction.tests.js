@@ -192,6 +192,47 @@ describe('Core.Interaction', function() {
 		});
 	});
 
+	describe('x-axis mode', function() {
+		var data = {
+			datasets: [{
+				label: 'Dataset 1',
+				data: [10, 20, 30],
+				pointHoverBorderColor: 'rgb(255, 0, 0)',
+				pointHoverBackgroundColor: 'rgb(0, 255, 0)'
+			}, {
+				label: 'Dataset 2',
+				data: [40, 40, 40],
+				pointHoverBorderColor: 'rgb(0, 0, 255)',
+				pointHoverBackgroundColor: 'rgb(0, 255, 255)'
+			}],
+			labels: ['Point 1', 'Point 2', 'Point 3']
+		};
+
+		beforeEach(function() {
+			this.chart = window.acquireChart({
+				type: 'line',
+				data: data
+			});
+		});
+
+		it ('behaves like index mode with intersect: false', function() {
+			var chart = this.chart;
+			var meta0 = chart.getDatasetMeta(0);
+			var meta1 = chart.getDatasetMeta(1);
+
+			var evt = {
+				type: 'click',
+				chart: chart,
+				native: true, // needed otherwise things its a DOM event
+				x: 0,
+				y: 0
+			};
+
+			var elements = Chart.Interaction.modes['x-axis'](chart, evt);
+			expect(elements).toEqual([meta0.data[0], meta1.data[0]]);
+		});
+	});
+
 	describe('dataset mode', function() {
 		describe('intersect: true', function() {
 			beforeEach(function() {
